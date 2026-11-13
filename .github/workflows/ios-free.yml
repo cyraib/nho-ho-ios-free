@@ -1,0 +1,45 @@
+name: iOS free development IPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_origin:
+        description: "Optional deployed app HTTPS origin; leave empty to enter it on iPhone"
+        required: false
+        type: string
+      allow_private_quota:
+        description: "Private repo only: I checked included Actions quota and disabled paid overages"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-free-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Standard public-repo runners are free. Private runs require an explicit
+    # quota check; this workflow cannot inspect your account's billing settings.
+    if: ${{ !github.event.repository.private || inputs.allow_private_quota }}
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Build unsigned iPhone app
+        env:
+          APP_ORIGIN: ${{ inputs.app_origin }}
+        run: bash ios/build-free.sh
+      - name: Upload IPA for local signing
+        uses: actions/upload-artifact@v4
+        with:
+          name: NhoHo-Free-unsigned
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

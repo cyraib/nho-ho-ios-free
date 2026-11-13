@@ -1,0 +1,4 @@
+artifacts/
+ios/*.xcodeproj/
+**/xcuserdata/
+.DS_Store
