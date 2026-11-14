@@ -82,7 +82,7 @@ struct JournalWebView: UIViewRepresentable {
         web.uiDelegate = context.coordinator
         web.isOpaque = false
         web.backgroundColor = UIColor(red: 0.965, green: 0.969, blue: 0.949, alpha: 1)
-        web.load(URLRequest(url: origin.appendingPathComponent("/").appending(queryItems: [URLQueryItem(name: "view", value: "journal")])))
+        web.load(URLRequest(url: origin.appendingPathComponent("/").appending(queryItems: [URLQueryItem(name: "view", value: "home")])))
         return web
     }
     func updateUIView(_ uiView: WKWebView, context: Context) {}
